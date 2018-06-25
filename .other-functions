@@ -1,0 +1,21 @@
+#!/bin/bash
+
+get-aws-account-id() {
+  aws sts get-caller-identity --query Account --output text
+}
+
+myip() {
+  local ip=$(curl -s https://api.ipify.org)
+  echo $ip
+}
+
+decrypt-secret-access-key() {
+  _encryptedKey=$1
+  if [[ -z ${_encryptedKey} ]]; then
+    echo "Usage: ${FUNCNAME[0]} <PGP Encrypted Secret Access Key>"
+    return 1
+  fi
+
+  echo ${_encryptedKey} | base64 -D | gpg2 --decrypt;echo;echo
+}
+

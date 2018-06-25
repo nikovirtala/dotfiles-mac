@@ -1,0 +1,121 @@
+#!/bin/bash
+
+awscli () {
+  docker run --rm -it \
+  -v "${HOME}/.aws:/root/.aws" \
+  nikovirtala/awscli:latest $@
+}
+
+aws-shell () {
+  docker run --rm -it \
+  -v "${HOME}/.aws:/root/.aws" \
+  nikovirtala/aws-shell:latest
+}
+
+cfssl () {
+  docker run --rm \
+  -v "$(pwd):/root" \
+  nikovirtala/cfssl:latest
+}
+
+cfssljson () {
+  docker run --rm -i \
+  -v "$(pwd):/root" \
+  nikovirtala/cfssljson:latest
+}
+
+# jq () {
+#   docker run --rm -i \
+#   -v "$(pwd):/root" \
+#   nikovirtala/jq:latest
+# }
+
+# kubectl () {
+#   docker run --rm -it \
+#   -v "${HOME}/.kube:/root/.kube" \
+#   -v "$(pwd):/root" \
+#   nikovirtala/kubectl:latest
+# }
+
+gcloud () {
+  docker run --rm -it \
+  -v "${HOME}/.config:/root/.config" \
+  -v "${HOME}/.ssh/:/root/.ssh" \
+  -v "${HOME}/.kube/:/root/.kube" \
+  google/cloud-sdk:alpine gcloud
+}
+
+# packer () {
+#   docker run --rm -it \
+#   -v "$(pwd):/root" \
+#   hashicorp/packer:light
+# }
+
+packer-full () {
+  docker run --rm -it \
+  -v "$(pwd):/root" \
+  hashicorp/packer:full
+}
+
+# terraform () {
+#   docker run --rm -it \
+#   -v "${HOME}/.aws:/root/.aws" \
+#   -v "$(pwd):/root" \
+#   hashicorp/terraform:light
+# }
+
+terraform-full () {
+  docker run --rm -it \
+  -v "${HOME}/.aws:/root/.aws" \
+  -v "$(pwd):/root" \
+  hashicorp/terraform:full
+}
+
+get-docker-node-ip () {
+  local node=$(docker node ls | grep "$1" | awk '{print $1}')
+  docker node inspect $node --format '{{.Status.Addr}}'
+}
+
+ssh-to-docker-node () {
+  ssh $(get-docker-node-ip $1)
+}
+
+get-docker-node-bu () {
+  echo -ne "$1 " && docker node inspect $1 | jq '.[].Description.Engine.Labels.business_unit'
+}
+
+get-ucp-client-bundle () {
+  local UCPFQDN=$1
+  local UCPUSER=$2
+  local UCPPASS=$3
+
+  local BUNDLEPATH="/Users/nikovirtala/tools/ucp-client-bundles"
+
+  if [[ ! -d "${BUNDLEPATH}" ]]; then
+    mkdir -p "${BUNDLEPATH}"
+  fi
+
+  local AUTHTOKEN=$(curl -sLk "https://${UCPFQDN}/auth/login" -d "{\"username\":\"${UCPUSER}\",\"password\":\"${UCPPASS}\"}" | jq -r .auth_token)
+
+  # Download the client certificate bundle
+  curl -k -H "Authorization: Bearer ${AUTHTOKEN}" https://${UCPFQDN}/api/clientbundle -o ${BUNDLEPATH}/${UCPFQDN}-${UCPUSER}.zip
+  if [ $? -eq 0 ]; then
+    echo "ucp-bundle-${UCPFQDN}-${UCPUSER}.zip received."
+  else
+    echo "failed to download ucp-bundle."
+  fi
+
+  # Extract the client certificate bundle
+  unzip ${BUNDLEPATH}/${UCPFQDN}-${UCPUSER}.zip -d ${BUNDLEPATH}/${UCPFQDN}-${UCPUSER}/
+
+}
+
+load-ucp-client-bundle () {
+  local UCPFQDN=$1
+  local UCPUSER=$2
+
+  local BUNDLEPATH="/Users/nikovirtala/tools/ucp-client-bundles"
+
+  source ${BUNDLEPATH}/${UCPFQDN}-${UCPUSER}/env.sh
+}
+
