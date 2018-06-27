@@ -1,0 +1,66 @@
+1Password 7.app
+App Store.app
+AppCleaner.app
+Atom Beta.app
+Atom.app
+Automator.app
+Beyond Compare.app
+CCleaner.app
+Calculator.app
+Calendar.app
+Chess.app
+Contacts.app
+DVD Player.app
+Dashboard.app
+Dictionary.app
+Docker.app
+FaceTime.app
+Firefox.app
+Font Book.app
+GarageBand.app
+GitKraken.app
+GoToMeeting
+GoToMeeting.app
+Google Chrome.app
+Google Drive File Stream.app
+HipChat.app
+Image Capture.app
+Keynote.app
+LastPass.app
+Launchpad.app
+Mail.app
+Maps.app
+Messages.app
+Microsoft Excel.app
+Microsoft OneNote.app
+Microsoft Outlook.app
+Microsoft PowerPoint.app
+Microsoft Remote Desktop.app
+Microsoft Teams.app
+Microsoft Word.app
+Mission Control.app
+Notes.app
+Numbers.app
+Pages.app
+Photo Booth.app
+Photos.app
+Preview.app
+QuickTime Player.app
+Reminders.app
+Safari.app
+Siri.app
+Slack.app
+SourceTree.app
+Spotify.app
+Stickies.app
+System Preferences.app
+TextEdit.app
+Time Machine.app
+Tunnelblick.app
+Utilities
+Visual Studio Code.app
+iBooks.app
+iMovie.app
+iTerm 2.app
+iTunes.app
+zoom.us.app
