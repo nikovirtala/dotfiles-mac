@@ -19,3 +19,29 @@ decrypt-secret-access-key() {
   echo ${_encryptedKey} | base64 -D | gpg2 --decrypt;echo;echo
 }
 
+tf-fmt-all() {
+  for i in $(ls -1 *.tf); do terraform-0.11.10 fmt $i; done
+}
+
+curlb() {
+  curl -s -o /dev/null -w '%{time_starttransfer}\n' "$@"
+}
+
+load-aws-profile() {
+  local account_id="$1"
+  if [[ ! -z "$account_id" ]]; then
+    unset AWS_ACCESS_KEY_ID
+    unset AWS_SECRET_ACCESS_KEY
+    unset AWS_SESSION_TOKEN
+    unset AWS_DEFAULT_REGION
+    aws-adfs login --region eu-west-1 --adfs-host=fs.vr.fi --ssl-verification --printenv --role-arn "arn:aws:iam::${account_id}:role/adfs-admin"
+  fi
+}
+
+unset-aws-profile() {
+  unset AWS_ACCESS_KEY_ID
+  unset AWS_SECRET_ACCESS_KEY
+  unset AWS_SESSION_TOKEN
+  unset AWS_DEFAULT_REGION
+}
+

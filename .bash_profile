@@ -1,6 +1,12 @@
+export HISTCONTROL=ignoredups:erasedups  # no duplicate entries
+export HISTSIZE=100000                   # many commands in ongoing session memory
+export HISTFILESIZE=100000               # many lines in .bash_history
+shopt -s histappend                      # append to history, don't overwrite it
+
 export GOPATH=$(go env GOPATH)
 export PATH=$PATH:$(go env GOPATH)/bin
 export PATH=$PATH:~/bin
+export PATH=$PATH:~/Library/Python/2.7/bin
 
 export ANSIBLE_NOCOWS=1
 
@@ -31,11 +37,9 @@ if [ -d ${HOME}/.terraform.d/logs ]; then
   export TF_LOG_PATH="${HOME}/.terraform.d/logs/terraform.log"
 fi
 
-# export PS1='`echo "${PWD%/*}" | sed -e "s;\(/.\)[^/]*;\1;g"`/${PWD##*/} \$ '
-
 source "/usr/local/opt/kube-ps1/share/kube-ps1.sh"
 export PS1='\u@\h \W $(kube_ps1)$ '
 kubeoff
 
-export DOCKER_ORCHESTRATOR=swarm
+export DOCKER_STACK_ORCHESTRATOR=swarm
 
